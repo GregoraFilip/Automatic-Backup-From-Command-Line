@@ -3,12 +3,9 @@ import datetime
 import shutil
 import sys
 
-total_modified = 0
-
-
 class Backup:
+    total_modified = 0
     def __init__(self, disk: str = "D") -> None:
-        self.total_modified = 0
         for e in [disk, "D", "E", "F"]:
             if self.__is_connected(e):
                 self.path = f"{e}:\\backup\\automatic_backup\\"
@@ -43,6 +40,7 @@ class Backup:
 
         return 0
 
+
     def setup(self) -> int:
         if not self.__is_connected():
             print("External storage is not connected!")
@@ -58,10 +56,9 @@ class Backup:
             f.write(str(1))
 
         print("Backup setuping succeed.")
-        self.backup()
+        return self.backup()
         
-        return 0
-
+        
     def add(self) -> None:
         from tkinter.filedialog import askdirectory as _askdirectory
 
@@ -87,9 +84,10 @@ class Backup:
         self.__iter_folder(path, 1)
         self.backup()
 
+
     def __iter_folder(self, path: str, last_modified: float) -> None:
         for file_name in os.listdir(path):
-            if file_name[0] == ".":
+            if file_name[0] == "." or file_name[:4] == "venv":
                 continue
             if not os.path.isdir(path + "\\" + file_name):
                 time = os.path.getmtime(path + "\\" + file_name)
